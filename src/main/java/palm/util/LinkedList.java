@@ -1,5 +1,7 @@
 package palm.util;
 
+import java.util.Iterator;
+
 /**
  * A simple double-linked list written as an exercise.
  * It supports both positive and negative indices, where negative ones go
@@ -8,7 +10,7 @@ package palm.util;
  * @author Craig Palmer
  * @param <T> the type of item stored in the list
  */
-public class LinkedList<T> {
+public class LinkedList<T> implements OrderedData<T> {
 
     /**
      * Create a LinkedList with the given items.
@@ -52,17 +54,9 @@ public class LinkedList<T> {
      * 
      * @return the current size
      */
+    @Override
     public int size() {
         return size;
-    }
-
-    /**
-     * Check if the list is empty (contains no items)
-     * 
-     * @return true if there are no elements, false otherwise
-     */
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     /**
@@ -72,6 +66,7 @@ public class LinkedList<T> {
      * @return the item
      * @throws IndexOutOfBoundsException if index is not within range
      */
+    @Override
     public T get(int index) {
         return getNode(index).value;
     }
@@ -81,6 +76,7 @@ public class LinkedList<T> {
      * 
      * @param item the item to add
      */
+    @Override
     public void add(T item) {
         Node<T> node = new Node<>(item);
 
@@ -103,6 +99,7 @@ public class LinkedList<T> {
      * @param index the index to add the item
      * @throws IndexOutOfBoundsException if index is not within range
      */
+    @Override
     public void insert(T item, int index) {
         // if at end, simply add
         if (index == size || index == -1) {
@@ -134,6 +131,7 @@ public class LinkedList<T> {
      * @return the item that was just removed
      * @throws IndexOutOfBoundsException if index is not within range
      */
+    @Override
     public T remove(int index) {
         Node<T> node = getNode(index);
         return removeNode(node);
@@ -145,6 +143,7 @@ public class LinkedList<T> {
      * @param item the item to remove
      * @return the item that was just removed, or null if it was not present
      */
+    @Override
     public T remove(T item) {
         for (Node<T> node = head; node.next != null; node = node.next) {
             if (node.value.equals(item)) {
@@ -157,6 +156,7 @@ public class LinkedList<T> {
     /**
      * Clear the list so it becomes empty.
      */
+    @Override
     public void clear() {
         head = null;
         tail = null;
@@ -169,6 +169,7 @@ public class LinkedList<T> {
      * @param item the item to search for
      * @return the index of the item, or -1 if not found
      */
+    @Override
     public int indexOf(T item) {
         int index = 0;
         Node<T> node = head;
@@ -236,6 +237,29 @@ public class LinkedList<T> {
         }
 
         return node;
+    }
+
+    //-------------------------------------------------
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<T> {
+        Node<T> next = head;
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public T next() {
+            Node<T> current = next;
+            next = next.next;
+            return current.value;
+        }
     }
 
 }
