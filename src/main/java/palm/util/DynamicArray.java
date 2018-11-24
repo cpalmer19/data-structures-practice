@@ -7,7 +7,7 @@ import java.util.Iterator;
  * 
  * @param <T> the type of data in the array
  */
-public class DynamicArray<T> implements OrderedData<T> {
+public class DynamicArray<T> implements Iterable<T> {
 
     /**
      * Create an DynamicArray with the specified elements.
@@ -50,7 +50,6 @@ public class DynamicArray<T> implements OrderedData<T> {
     /**
      * Get the number of items currently in the array.
      */
-    @Override
     public int size() {
         return size;
     }
@@ -59,14 +58,20 @@ public class DynamicArray<T> implements OrderedData<T> {
      * Add the given element to the end of the array.
      * @param item the element to add
      */
-    @Override
     public void add(T item) {
         ensureCapacity();
         elements[size] = item;
         size++;
     }
 
-    @Override
+    /**
+     * Insert the given item at the specified index.
+     * The index must be in range 0 < index <= size.
+     * 
+     * @param item the item to add
+     * @param index the index to add the item
+     * @throws IndexOutOfBoundsException if index is not within range
+     */
     public void insert(T item, int index) {
         index = absoluteIndexForInsert(index);
         checkIndexForInsert(index);
@@ -83,13 +88,17 @@ public class DynamicArray<T> implements OrderedData<T> {
      * @param item the item to remove
      * @return the item removed, or null if it was not present
      */
-    @Override
     public T remove(T item) {
         int index = indexOf(item);
         return (index == -1) ? null : remove(index);
     }
 
-    @Override
+    /**
+     * Remove the item at the specified index.
+     * 
+     * @param index the index to remove the item from
+     * @return the item removed
+     */
     public T remove(int index) {
         index = absoluteIndex(index);
         T item = getElement(index);
@@ -103,18 +112,28 @@ public class DynamicArray<T> implements OrderedData<T> {
     /**
      * Clear all the elements from this array.
      */
-    @Override
     public void clear() {
         size = 0;
     }
 
-    @Override
+    /**
+     * Get the item at the specified index.
+     * 
+     * @param index the index to get the item from
+     * @return the item
+     * @throws IndexOutOfBoundsException if index is not within range
+     */
     public T get(int index) {
         index = absoluteIndex(index);
         return getElement(index);
     }
 
-    @Override
+   /**
+    * Find the index that the given item appears at.
+    * 
+    * @param item the item to find
+    * @return the index, or -1 if not found
+    */
     public int indexOf(T item) {
 		for (int i = 0; i < size; i++) {
             if (item.equals(elements[i])) {
@@ -141,7 +160,6 @@ public class DynamicArray<T> implements OrderedData<T> {
         public T next() {
             return elements[index++];
         }
-
     }
 
     //----------------
