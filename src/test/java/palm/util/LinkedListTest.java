@@ -207,5 +207,30 @@ class LinkedListTest {
             assertEquals(3, list.size(), "Size should be unchanged");
             assertEquals("Bar", list.get(1), "Items should be unchanged");
         }
+
+        @Test
+        void remove_item_last() {
+            String value = "Hi";
+            String removed = list.remove(value);
+            assertEquals(value, removed);
+            assertEquals(2, list.size());
+            assertFalse(list.contains(value));
+        }
+
+        @Test
+        void remove_item_single() {
+            String value = "Foo";
+            list = LinkedList.of(value);
+            String removed = list.remove(value);
+            assertEquals(value, removed);
+            assertEquals(0, list.size());
+            assertFalse(list.contains(value));
+        }
+
+        @Test
+        void remove_no_items() {
+            list = LinkedList.of();
+            assertNull(list.remove("Foo"));
+        }
     }
 }

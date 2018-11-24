@@ -139,12 +139,21 @@ public class LinkedList<T> implements Iterable<T> {
      * @return the item that was just removed, or null if it was not present
      */
     public T remove(T item) {
-        for (Node<T> node = head; node.next != null; node = node.next) {
+        Node<T> node = head;
+        while (node != null) {
             if (node.value.equals(item)) {
                 return removeNode(node);
             }
+            node = node.next;
         }
         return null;
+    }
+
+    /**
+     * Check if the given item is in this list
+     */
+    public boolean contains(T item) {
+        return indexOf(item) != -1;
     }
 
     /**
@@ -176,16 +185,6 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     /**
-     * Check if the given item is present in the list.
-     * 
-     * @param item the item to look for
-     * @return true if present, false otherwise
-     */
-    public boolean contains(T item) {
-        return indexOf(item) != -1;
-    }
-
-    /**
      * Remove the given node from the list.
      * This decrements the size value.
      */
@@ -196,8 +195,9 @@ public class LinkedList<T> implements Iterable<T> {
         if (node.next != null) {
             node.next.prev = node.prev;
         }
-
-        size--;
+        if (--size == 0) {
+            head = tail = null;
+        }
         return node.value;
     }
 
